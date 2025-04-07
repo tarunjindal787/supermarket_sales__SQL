@@ -123,6 +123,61 @@ WHERE Row_Num <= 3
 ORDER BY City, Total_Profit DESC;
 
 
+--Q12 Top 3 product lines by average total sales per invoice
+SELECT 
+    "Product line",
+    ROUND(AVG("Total"), 2) AS avg_total_sales
+FROM 
+    supermarket_sales
+GROUP BY 
+    "Product line"
+ORDER BY 
+    avg_total_sales DESC
+LIMIT 3;
+
+
+--Q13 Compare average spending by gender using different payment methods
+SELECT 
+    Gender,
+    Payment,
+    ROUND(AVG("Total"), 2) AS avg_spent
+FROM 
+    supermarket_sales
+GROUP BY 
+    Gender, Payment
+ORDER BY 
+    avg_spent DESC;
+
+
+
+--Q14 . Which branch has the highest average rating for 'Health and beauty'?
+SELECT 
+    Branch,
+    ROUND(AVG(Rating), 2) AS avg_rating
+FROM 
+    supermarket_sales
+WHERE 
+    "Product line" = 'Health and beauty'
+GROUP BY 
+    Branch
+ORDER BY 
+    avg_rating DESC
+LIMIT 1;
+
+
+--Q15 Use window function: Rank product lines by sales per branch
+SELECT 
+    Branch,
+    "Product line",
+    SUM("Total") AS total_sales,
+    RANK() OVER (PARTITION BY Branch ORDER BY SUM("Total") DESC) AS rank
+FROM 
+    supermarket_sales
+GROUP BY 
+    Branch, "Product line";
+
+
+
  
 
 
